@@ -11,7 +11,7 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "networking/"
+  source = "network/"
 
   name = "${var.cliente}"
 
