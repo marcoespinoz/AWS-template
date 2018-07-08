@@ -154,3 +154,37 @@ resource "aws_instance" "this" {
     Name = "NAT"
   }
 }
+
+resource "aws_security_group" "aws" {
+  name        = "AWS"
+  description = "Trafico interno AWS"
+  vpc_id      = "${aws_vpc.this.id}"
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["${var.cidr}"]
+  }
+
+  tags {
+    Name = "AWS"
+  }
+}
+
+resource "aws_security_group" "Seidor" {
+  name        = "Seidor"
+  description = "Trafico RDP a los servidores desde las IPs publicas de Seidor"
+  vpc_id      = "${aws_vpc.this.id}"
+
+  ingress {
+    from_port   = 3389
+    to_port     = 3389
+    protocol    = "tcp"
+    cidr_blocks = ["181.224.245.2/32", "170.231.83.234/32", "132.157.130.78/32"]
+  }
+
+  tags {
+    Name = "Seidor"
+  }
+}
