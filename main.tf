@@ -1,4 +1,4 @@
-#Esta es una prueba de git v2
+#Esta es una prueba de git v3
 provider "aws" {
   #CAMBIAR LA REGION#
   region = "us-east-1"
