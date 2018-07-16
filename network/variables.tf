@@ -34,3 +34,19 @@ variable "private_subnets" {
 variable "ami" {
   default = "ami-01623d7b"
 }
+
+variable "customerip" {
+  default = ""
+}
+
+variable "static_routes" {
+  default = []
+}
+
+variable "crear_vpn" {
+  default = ""
+}
+
+variable "gateway_cliente" {
+  default = []
+}

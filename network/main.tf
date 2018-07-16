@@ -188,3 +188,50 @@ resource "aws_security_group" "Seidor" {
     Name = "Seidor"
   }
 }
+
+##############
+# VPN Gateway
+##############
+resource "aws_vpn_gateway" "this" {
+  count  = "${var.crear_vpn}"
+  vpc_id = "${aws_vpc.this.id}"
+}
+
+resource "aws_vpn_gateway_attachment" "this" {
+  count          = "${var.crear_vpn}"
+  vpc_id         = "${aws_vpc.this.id}"
+  vpn_gateway_id = "${var.vpn_gateway_id}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "public" {
+  count          = "${var.crear_vpn}"
+  route_table_id = "${aws_route_table.public.id}"
+  vpn_gateway_id = "${aws_vpn_gateway.this.id}"
+}
+
+resource "aws_vpn_gateway_route_propagation" "private" {
+  count          = "${var.crear_vpn}"
+  route_table_id = "${aws_route_table.private.id}"
+  vpn_gateway_id = "${aws_vpn_gateway.this.id}"
+}
+
+resource "aws_customer_gateway" "this" {
+  count      = "${length(var.gateway_cliente)}"
+  bgp_asn    = 65000
+  ip_address = "${element(var.gateway_cliente, count.index)}"
+  type       = "ipsec.1"
+}
+
+resource "aws_vpn_connection" "this" {
+  count               = "${length(var.gateway_cliente)}"
+  vpn_gateway_id      = "${aws_vpn_gateway.this.id}"
+  customer_gateway_id = "${aws_customer_gateway.this.*.id}"
+  type                = "ipsec.1"
+  static_routes_only  = true
+}
+
+resource "aws_vpn_connection_route" "this" {
+  count                  = "${length(var.static_routes) ? (var.crear_vpn): 0 }"
+  destination_cidr_block = "${var.static_routes[count.index]}"
+  vpn_connection_id      = "${aws_vpn_connection.this.id}"
+}
