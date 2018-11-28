@@ -5,11 +5,6 @@ provider "aws" {
 
   shared_credentials_file = "~/.aws/credentials"
   profile                 = "default"
-
-  assume_role {
-    #CAMBIAR EL NUMERO CON EL CODIGO DE LA CUENTA AWS DEL CLIENTE DONDE SE DESEA DESPLEGAR LA NUEVA VPC
-    role_arn = "arn:aws:iam::116332599801:role/CrossAccountSeidorTech"
-  }
 }
 
 module "vpc" {
@@ -25,9 +20,4 @@ module "vpc" {
   azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
   private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   public_subnets  = ["10.1.4.0/24", "10.1.5.0/24"]
-
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
 }
