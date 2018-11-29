@@ -1,6 +1,6 @@
 #Esta es una prueba de git v3
 provider "aws" {
-  #SPECIFY REGION#
+  #SPECIFY REGIONa#
   region = "us-east-1"
 
   shared_credentials_file = "~/.aws/credentials"
