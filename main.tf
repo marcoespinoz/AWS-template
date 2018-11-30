@@ -11,7 +11,7 @@ module "vpc" {
   source = "network/"
 
   #NOMBRE DE LA VPC
-  name = "BASIS-DEMO"
+  name = "BASISDEMO"
 
   #BLOQUE DE IP PARA LA VPC
   cidr = "10.1.0.0/16"
