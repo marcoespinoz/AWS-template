@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'centos-slave1'}
     options {
         ansiColor('xterm')
     }
