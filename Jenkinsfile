@@ -4,11 +4,11 @@ pipeline {
         ansiColor('xterm')
     }
     stages {
-        stage ('git') {
+ /*       stage ('git') {
             steps {
                 sh "rm -rf /home/jenkins/jenknis_slave/workspace/terraform/AWS-template && git clone git@github.com:marko-espi/AWS-template.git"
             }
-        }
+        }*/
         stage ('init') {
             steps {
                 sh "terraform init -input=false AWS-template/"
