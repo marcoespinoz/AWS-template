@@ -7,6 +7,7 @@ provider "aws" {
   profile                 = "default"
 }
 
+#setup remote terraform.state
 terraform {
  backend "s3" {
  encrypt = true
