@@ -4,18 +4,18 @@ pipeline {
         ansiColor('xterm')
     }
     stages {
-        stage ('init') {
+        stage ('Init') {
             steps {
                 sh "terraform init -input=false"
             }
         }
-        stage ('plan') {
+        stage ('Plan') {
             steps {
                 sh "terraform plan -out=tfplan -input=false"
             }
             
         }
-        stage ('apply') {
+        stage ('Apply changes') {
             steps {
                 input 'Does this seems OK?'
                 milestone(1)
