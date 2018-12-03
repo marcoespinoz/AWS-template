@@ -7,6 +7,15 @@ provider "aws" {
   profile                 = "default"
 }
 
+terraform {
+ backend "s3" {
+ encrypt = true
+ bucket = "terraform-remote-state-v1"
+ region = "us-east-1"
+ key = "terraform.tfstate"
+ }
+}
+
 module "vpc" {
   source = "network/"
 

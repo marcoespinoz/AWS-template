@@ -4,19 +4,14 @@ pipeline {
         ansiColor('xterm')
     }
     stages {
- /*       stage ('git') {
-            steps {
-                sh "rm -rf /home/jenkins/jenknis_slave/workspace/terraform/AWS-template && git clone git@github.com:marko-espi/AWS-template.git"
-            }
-        }*/
         stage ('init') {
             steps {
-                sh "terraform init -input=false AWS-template/"
+                sh "terraform init -input=false"
             }
         }
         stage ('plan') {
             steps {
-                sh "terraform plan -out=AWS-template/tfplan -input=false AWS-template/"
+                sh "terraform plan -out=tfplan -input=false"
             }
             
         }
@@ -24,7 +19,7 @@ pipeline {
             steps {
                 input 'Does this seems OK?'
                 milestone(1)
-                sh "terraform apply -input=false AWS-template/tfplan"
+                sh "terraform apply -input=false tfplan"
             }
             
         }
