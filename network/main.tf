@@ -61,7 +61,7 @@ resource "aws_route" "private_nat_gateway" {
   timeouts {
     create = "5m"
   }
-} 
+}
 
 ################
 # Public subnet
@@ -117,7 +117,7 @@ resource "aws_eip" "nat" {
   vpc = true
 
   tags {
-    Name = "NAT IP"
+    Name = "IP NAT"
   }
 }
 
@@ -153,4 +153,3 @@ resource "aws_security_group" "this" {
     Name = "AWS"
   }
 }
-
