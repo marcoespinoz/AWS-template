@@ -1,13 +1,42 @@
+#####
+# DNS
+#####
+resource "aws_route53_zone" "this" {
+  name = "inkafarma.internal"
+
+  vpc {
+    vpc_id = "${aws_vpc.this.id}"
+  }
+}
+
+######
+# DHCP
+######
+resource "aws_vpc_dhcp_options" "this" {
+  domain_name = "inkafarma.internal"
+  domain_name_servers = ["AmazonProvidedDNS"]
+  tags = {
+    Name = "inkafarma"
+  }
+}
+
 ######
 # VPC
 ######
 resource "aws_vpc" "this" {
   cidr_block       = "${var.cidr}"
   instance_tenancy = "default"
+  enable_dns_hostnames = "true"
+  enable_dns_support =   "true"
 
   tags = {
     Name = "${var.name}"
   }
+}
+
+resource "aws_vpc_dhcp_options_association" "dns_resolver" {
+  vpc_id          = "${aws_vpc.this.id}"
+  dhcp_options_id = "${aws_vpc_dhcp_options.this.id}"
 }
 
 ###################
@@ -109,9 +138,9 @@ resource "aws_route_table_association" "public" {
   route_table_id = "${aws_route_table.public.id}"
 }
 
-#########
+#############
 # NAT GATEWAY
-#########
+#############
 
 resource "aws_eip" "nat" {
   vpc = true
@@ -125,7 +154,7 @@ resource "aws_nat_gateway" "nat_gw" {
   allocation_id = "${aws_eip.nat.id}"
   subnet_id     = "${element(aws_subnet.public.*.id, count.index)}"
 }
-
+/*
 ##################
 # SECURITY GROUPS
 ##################
@@ -153,3 +182,4 @@ resource "aws_security_group" "this" {
     Name = "AWS"
   }
 }
+*/

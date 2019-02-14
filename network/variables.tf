@@ -31,10 +31,6 @@ variable "private_subnets" {
   default = []
 }
 
-variable "ami" {
-  default = "ami-01623d7b"
-}
-
 variable "customerip" {
   default = ""
 }
