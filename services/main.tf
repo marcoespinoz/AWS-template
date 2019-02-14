@@ -1,30 +1,11 @@
-resource "aws_security_group" "web" {
-  name        = "Allow http"
-  description = "Allow all http traffic"
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
 
-  }
-  vpc_id = "${var.vpc_id}"
-
-}
-
-resource "aws_instance" "webs" {
-  count = "${var.num_instancias}"
+resource "aws_instance" "front_end" {
+  count = "${var.num_instancias_front}"
   ami = "${var.ami}"
   instance_type = "${var.tipo_instancia}"
-  vpc_security_group_ids = ["${aws_security_group.web.id}"]
-  subnet_id = "${element(var.sub_id, count.index)}"
+  vpc_security_group_ids = ["${var.sec_frontend_id}"]
+  subnet_id = "${element(var.subpublic_id, count.index)}"
   key_name = "test"
 
   root_block_device {
@@ -33,7 +14,25 @@ resource "aws_instance" "webs" {
     volume_size = 20
   }
   tags {
-    Name = "WEB-${count.index}"
+    Name = "FRONT-${count.index}"
+  }
+}
+
+resource "aws_instance" "back_end" {
+  count = "${var.num_instancias_back}"
+  ami = "${var.ami}"
+  instance_type = "${var.tipo_instancia}"
+  vpc_security_group_ids = ["${var.sec_backend_id}"]
+  subnet_id = "${element(var.subprivate_id, count.index)}"
+  key_name = "test"
+
+  root_block_device {
+    delete_on_termination = "true"
+    volume_type = "gp2"
+    volume_size = 20
+  }
+  tags {
+    Name = "BACK-${count.index}"
   }
 }
 /*

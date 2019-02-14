@@ -2,7 +2,7 @@
 # DNS
 #####
 resource "aws_route53_zone" "this" {
-  name = "inkafarma.internal"
+  name = "demo.internal"
 
   vpc {
     vpc_id = "${aws_vpc.this.id}"
@@ -13,7 +13,7 @@ resource "aws_route53_zone" "this" {
 # DHCP
 ######
 resource "aws_vpc_dhcp_options" "this" {
-  domain_name = "inkafarma.internal"
+  domain_name = "demo.internal"
   domain_name_servers = ["AmazonProvidedDNS"]
   tags = {
     Name = "inkafarma"
@@ -154,23 +154,22 @@ resource "aws_nat_gateway" "nat_gw" {
   allocation_id = "${aws_eip.nat.id}"
   subnet_id     = "${element(aws_subnet.public.*.id, count.index)}"
 }
-/*
+
 ##################
 # SECURITY GROUPS
 ##################
 
-resource "aws_security_group" "this" {
-  name        = "AWS internal"
-  description = "Allow internal traffic"
-  vpc_id      = "${aws_vpc.this.id}"
+resource "aws_security_group" "database" {
+  name        = "Allow mysql traffic"
+  description = "Allow mysql traffic"
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["${var.cidr}"]
-  }
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["10.1.3.0/24", "10.1.4.0/24"]
 
+  }
   egress {
     from_port       = 0
     to_port         = 0
@@ -178,8 +177,67 @@ resource "aws_security_group" "this" {
     cidr_blocks     = ["0.0.0.0/0"]
 
   }
-  tags {
-    Name = "AWS"
-  }
+  vpc_id = "${aws_vpc.this.id}"
+
 }
-*/
+
+resource "aws_security_group" "backend" {
+  name        = "Connection to backend"
+  description = "Connection to backend"
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["10.1.5.0/24", "10.1.6.0/24"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+
+  }
+  vpc_id = "${aws_vpc.this.id}"
+
+}
+resource "aws_security_group" "web" {
+  name        = "Allow http"
+  description = "Allow all http traffic"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+
+  }
+  vpc_id = "${aws_vpc.this.id}"
+
+}
+resource "aws_security_group" "bastion" {
+  name        = "Allow Bastion"
+  description = "Allow all traffic for bastion"
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["${var.cidr}"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+
+  }
+  vpc_id = "${aws_vpc.this.id}"
+
+}
