@@ -19,3 +19,7 @@ output "sec_frontend_id" {
 output "sec_db_id" {
   value = ["${aws_security_group.database.id}"]
 }
+
+output "sec_internal_id" {
+  value = ["${aws_security_group.internal.id}"]
+}

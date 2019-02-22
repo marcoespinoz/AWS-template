@@ -4,9 +4,9 @@ resource "aws_instance" "front_end" {
   count = "${var.num_instancias_front}"
   ami = "${var.ami}"
   instance_type = "${var.tipo_instancia}"
-  vpc_security_group_ids = ["${var.sec_frontend_id}"]
+  vpc_security_group_ids = ["${var.sec_frontend_id}", "${var.sec_internal_id}"]
   subnet_id = "${element(var.subpublic_id, count.index)}"
-  key_name = "test"
+  key_name = "marco-test"
 
   root_block_device {
     delete_on_termination = "true"
@@ -14,7 +14,7 @@ resource "aws_instance" "front_end" {
     volume_size = 20
   }
   tags {
-    Name = "FRONT-${count.index}"
+    Name = "MGMT-${count.index}"
   }
 }
 
@@ -22,9 +22,9 @@ resource "aws_instance" "back_end" {
   count = "${var.num_instancias_back}"
   ami = "${var.ami}"
   instance_type = "${var.tipo_instancia}"
-  vpc_security_group_ids = ["${var.sec_backend_id}"]
+  vpc_security_group_ids = ["${var.sec_backend_id}", "${var.sec_internal_id}"]
   subnet_id = "${element(var.subprivate_id, count.index)}"
-  key_name = "test"
+  key_name = "marco-test"
 
   root_block_device {
     delete_on_termination = "true"

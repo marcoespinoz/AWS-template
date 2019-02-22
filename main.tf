@@ -29,12 +29,14 @@ module "services" {
   num_instancias_front  = 2
   num_instancias_back   = 2
   ami                   = "ami-04c629a0594b4b475"
-  tipo_instancia        = "t2.micro"
+  tipo_instancia        = "t2.medium"
   vpc_id                = "${module.vpc.vpc_id}"
-  
+
   subpublic_id          = ["${module.vpc.subpublic_id}"]
   subprivate_id         = ["${module.vpc.subprivate_id}"]
 
   sec_frontend_id       = ["${module.vpc.sec_frontend_id}"]
   sec_backend_id        = ["${module.vpc.sec_backend_id}"]
+
+  sec_internal_id        = ["${module.vpc.sec_internal_id}"]
 }

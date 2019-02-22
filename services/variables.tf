@@ -39,3 +39,6 @@ variable "sec_backend_id" {
 variable "sec_frontend_id" {
   default = []
 }
+variable "sec_internal_id" {
+  default = []
+}

@@ -211,6 +211,18 @@ resource "aws_security_group" "web" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["200.37.217.53/32"]
+  }
   egress {
     from_port       = 0
     to_port         = 0
@@ -221,9 +233,9 @@ resource "aws_security_group" "web" {
   vpc_id = "${aws_vpc.this.id}"
 
 }
-resource "aws_security_group" "bastion" {
-  name        = "Allow Bastion"
-  description = "Allow all traffic for bastion"
+resource "aws_security_group" "internal" {
+  name        = "Allow internal"
+  description = "Allow all internal traffic"
 
   ingress {
     from_port   = 0
